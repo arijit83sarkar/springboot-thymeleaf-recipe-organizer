@@ -2,7 +2,6 @@ package com.raven.springbootthymeleafrecipeorganizer.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -20,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import com.raven.springbootthymeleafrecipeorganizer.entity.Recipe;
-import com.raven.springbootthymeleafrecipeorganizer.entity.RecipeImage;
 import com.raven.springbootthymeleafrecipeorganizer.service.RecipeService;
 
 @Controller

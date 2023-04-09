@@ -51,6 +51,7 @@ public class RecipeController {
 			// t.setImageName(t.getRecipeImage().getOriginalFileName().toString());
 			// System.out.println(__fileName + " : " + __Url);
 
+			t.setImageName(t.getRecipeImage().getOriginalFileName().toString());
 			t.setImageURL(MvcUriComponentsBuilder
 					.fromMethodName(RecipeController.class, "getImage",
 							t.getRecipeImage().getOriginalFileName().toString())
@@ -82,9 +83,19 @@ public class RecipeController {
 		return "redirect:/recipe/list";
 	}
 
-	@GetMapping("/view")
-	public ModelAndView getRecipe(String uuid) {
-		return null;
+	@GetMapping("/view/{id}")
+	public ModelAndView getRecipe(@PathVariable(name = "id") int id) {
+		Recipe recipe = this.recipeService.findById(id);
+		recipe.setImageName(recipe.getRecipeImage().getOriginalFileName());
+		recipe.setImageURL(MvcUriComponentsBuilder
+				.fromMethodName(RecipeController.class, "getImage",
+						recipe.getRecipeImage().getOriginalFileName().toString())
+				.build().toString());
+
+		ModelAndView modelAndView = new ModelAndView("recipe/viewrecipe");
+		modelAndView.addObject("recipe", recipe);
+
+		return modelAndView;
 	}
 
 	@GetMapping("/images/{fileName}")
@@ -97,14 +108,15 @@ public class RecipeController {
 	}
 
 	// public void getImageList() {
-	// 	List<String> imageList = this.recipeService.loadAllImages().map(t -> {
-	// 		String __fileName = t.getFileName().toString();
-	// 		String __Url = MvcUriComponentsBuilder
-	// 				.fromMethodName(RecipeController.class, "getImage", t.getFileName().toString()).build().toString();
-	// 		return __fileName + "," + __Url;
-	// 	}).collect(Collectors.toList());
+	// List<String> imageList = this.recipeService.loadAllImages().map(t -> {
+	// String __fileName = t.getFileName().toString();
+	// String __Url = MvcUriComponentsBuilder
+	// .fromMethodName(RecipeController.class, "getImage",
+	// t.getFileName().toString()).build().toString();
+	// return __fileName + "," + __Url;
+	// }).collect(Collectors.toList());
 
-	// 	System.out.println("\nImage list :: " + imageList.toString());
+	// System.out.println("\nImage list :: " + imageList.toString());
 	// }
 
 }

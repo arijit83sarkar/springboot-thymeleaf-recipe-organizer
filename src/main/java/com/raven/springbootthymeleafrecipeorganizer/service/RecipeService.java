@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -33,10 +34,9 @@ public class RecipeService {
 	}
 
 	public List<Recipe> findAll() {
-		/* return this.recipeRepository.findAll(); */
-		List<Recipe> recipes = this.recipeRepository.getRecipes();
-		// System.out.println("Recipe List :: " + recipes);
-		return recipes;
+		return this.recipeRepository.findAll();
+		// List<Recipe> recipes = this.recipeRepository.getRecipes();
+		// return recipes;
 	}
 
 	public Recipe findById(int _id) {
@@ -53,12 +53,12 @@ public class RecipeService {
 	}
 
 	public Recipe saveRecipe(Recipe _recipe, MultipartFile multipartFile) {
-		String fileName = "";
+		String fileName;
 		Recipe recipe = null;
-		Path filePath = null;
+		Path filePath;
 
 		try {
-			fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+			fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
 			String[] splitName = fileName.split("\\.(?=[^\\.]+$)");
 			fileName = splitName[0].concat("_").concat(String.valueOf((new Date()).getTime())).concat(".")
 					.concat(splitName[1]);
@@ -69,8 +69,6 @@ public class RecipeService {
 			_recipe.setRecipeImage(recipeImage);
 
 			recipe = this.recipeRepository.save(_recipe);
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -101,7 +99,8 @@ public class RecipeService {
 	public Stream<Path> loadAllImages() {
 		try {
 			Path imageDirPath = Paths.get(this.IMAGE_UPLOAD_DIR);
-			return Files.walk(imageDirPath, 1).filter(path -> !path.equals(imageDirPath)).map(imageDirPath::relativize);
+			return Files.walk(imageDirPath, 1)
+					.filter(path -> !path.equals(imageDirPath)).map(imageDirPath::relativize);
 		} catch (IOException e) {
 			throw new RuntimeException("Could not load the image files.");
 		}

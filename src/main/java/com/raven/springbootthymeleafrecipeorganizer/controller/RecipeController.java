@@ -49,10 +49,10 @@ public class RecipeController {
 			// t.setImageName(t.getRecipeImage().getOriginalFileName().toString());
 			// System.out.println(__fileName + " : " + __Url);
 
-			t.setImageName(t.getRecipeImage().getOriginalFileName().toString());
+			t.setImageName(t.getRecipeImage().getOriginalFileName());
 			t.setImageURL(MvcUriComponentsBuilder
 					.fromMethodName(RecipeController.class, "getImage",
-							t.getRecipeImage().getOriginalFileName().toString())
+							t.getRecipeImage().getOriginalFileName())
 					.build().toString());
 
 			recipes.add(t);
@@ -75,8 +75,8 @@ public class RecipeController {
 
 	@PostMapping("/save")
 	public String saveRecipe(@ModelAttribute("recipe") Recipe recipe,
-			@RequestParam("inputFile") MultipartFile multipartFile) {
-		this.recipeService.saveRecipe(recipe, multipartFile);
+							 @RequestParam("inputFile") MultipartFile multipartFile) {
+		Recipe savedRecipe = this.recipeService.saveRecipe(recipe, multipartFile);
 
 		return "redirect:/recipe/list";
 	}
@@ -87,7 +87,7 @@ public class RecipeController {
 		recipe.setImageName(recipe.getRecipeImage().getOriginalFileName());
 		recipe.setImageURL(MvcUriComponentsBuilder
 				.fromMethodName(RecipeController.class, "getImage",
-						recipe.getRecipeImage().getOriginalFileName().toString())
+						recipe.getRecipeImage().getOriginalFileName())
 				.build().toString());
 
 		ModelAndView modelAndView = new ModelAndView("recipe/viewrecipe");
